@@ -1,0 +1,7 @@
+$primary-color: #3162ff;
+$secondary-color: #14355a;
+$constract-color: rgb(221, 204, 41);
+
+@mixin mainFont {
+  font-family: Verdana, sans-serif;
+}
