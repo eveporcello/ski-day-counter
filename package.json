@@ -1,6 +1,6 @@
 {
   "name": "ski-day-counter",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A sample React application for use in lynda.com's React Essential Training with Eve Porcello",
   "main": "index.js",
   "scripts": {

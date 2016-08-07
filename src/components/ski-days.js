@@ -28,3 +28,53 @@ SkiDayCount.propTypes = {
     powder: PropTypes.number,
     backcountry: PropTypes.number
 }
+
+const SkiDayRow = ({ resort, date, powder, backcountry }) =>
+    <tr>
+        <td>
+            {date.getMonth() + 1}/{date.getDate()}/{date.getFullYear()}
+        </td>
+        <td>
+            {resort}
+        </td>
+        <td>
+            {(powder) ? <SnowFlake /> : null }
+        </td>
+        <td>
+            {(backcountry) ? <Terrain /> : null }
+        </td>
+    </tr>
+
+SkiDayRow.propTypes = {
+    resort: PropTypes.string.isRequired,
+    date: PropTypes.instanceOf(Date).isRequired,
+    powder: PropTypes.bool,
+    backcountry: PropTypes.bool
+}
+
+export const SkiDayList = ({ days }) =>
+    <div className="ski-day-list">
+        <table>
+            <thead>
+            <tr>
+                <th>Date</th>
+                <th>Resort</th>
+                <th><SnowFlake /></th>
+                <th><Terrain /></th>
+            </tr>
+            </thead>
+            <tbody>
+            {days.map((day, i) =>
+                <SkiDayRow key={i} {...day} />
+            )}
+            </tbody>
+        </table>
+    </div>
+
+SkiDayList.propTypes = {
+    days: (props) => (!Array.isArray(props.days)) ?
+        new Error("SkiDayList days property must be an array") :
+        (!props.days.length) ?
+            new Error("SkiDayList days array must contain at least one record") :
+            null
+}
