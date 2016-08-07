@@ -4,7 +4,16 @@ html,
 body,
 #react-container {
   height: 100%;
-  font-size: 100%;
+  font-size: 85%;
+
+  @media screen and (min-width: $break-sm) {
+    font-size: 100%;
+  }
+
+  @media screen and (min-width: $break-md) {
+    font-size: 115%;
+  }
+
 }
 
 body,
@@ -21,5 +30,7 @@ div.app {
   height: calc(100% - 2em);
   background-color: $secondary-color;
   color: $constract-color;
+
   @include mainFont;
+  @include flex-center;
 }
