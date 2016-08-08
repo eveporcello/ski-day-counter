@@ -1,5 +1,18 @@
 import { PropTypes } from 'react'
+import CloseButton from 'react-icons/lib/fa/close'
 import '../../stylesheets/navigation.scss'
+
+export const ShowError = ({ message, onClose=f=>f, offset=0 }) =>
+    <div className="error" style={{ bottom: offset }}>
+        <p>{message}</p>
+        <CloseButton onClick={onClose} />
+    </div>
+
+ShowError.propTypes = {
+    meessage: PropTypes.string.isRequired,
+    onClose: PropTypes.func,
+    offset: PropTypes.number
+}
 
 export const Link = ({ children, select=false, onClick=f=>f }) =>
     (select) ?

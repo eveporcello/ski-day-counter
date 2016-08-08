@@ -43,3 +43,18 @@ nav.menu {
   }
 
 }
+
+div.error {
+  width: calc(100% - 3em);
+  position: fixed;
+  left: 0;
+  background-color: $error;
+  color: white;
+  @include mainFont;
+  padding: 1em;
+  border-radius: .5em;
+  margin: .5em;
+  display: flex;
+  justify-content: space-between;
+  border: solid 1px white;
+}

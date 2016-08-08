@@ -1,12 +1,9 @@
-Ski Day Counter - Adding Ski days
+Ski Day Counter - Handling Errors
 =================
-This next step adds `<AddDay />`, and adds new ski day info to the array
+This next step adds `<ShowError />`, and provides a mechanism for showing and clearning errors.
 
 Topics
 -------
 
-* refs
-* two way function binding
-* immutable arrays
-* sorting arrays
-* setState
+* style object
+* recording errors
