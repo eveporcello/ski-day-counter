@@ -32,7 +32,7 @@ SkiDayCount.propTypes = {
 const SkiDayRow = ({ resort, date, powder, backcountry }) =>
     <tr>
         <td>
-            {date.getMonth() + 1}/{date.getDate()}/{date.getFullYear()}
+            {date}
         </td>
         <td>
             {resort}
@@ -77,4 +77,61 @@ SkiDayList.propTypes = {
         (!props.days.length) ?
             new Error("SkiDayList days array must contain at least one record") :
             null
+}
+
+export const AddDay = ({ onNewDay=f=>f}) => {
+
+    let _resort, _date, _powder, _backcountry
+
+    const submit = e => {
+        e.preventDefault()
+        onNewDay({
+            resort: _resort.value,
+            date: _date.value.toString(),
+            powder: _powder.checked,
+            backcountry: _backcountry.checked
+        })
+        _resort.value = ''
+        _date.value = ''
+        _powder.checked = false
+        _backcountry.checked = false
+    }
+
+    return (
+        <form onSubmit={submit} className="add-day">
+
+            <label htmlFor="date">Resort Name</label>
+            <input type="text"
+                   ref={input => _resort = input}
+                   required/>
+
+            <label htmlFor="date">Date</label>
+            <input id="date"
+                   type="date"
+                   ref={input => _date = input}
+                   required/>
+
+            <div>
+                <input id="powder-day"
+                       ref={input => _powder = input}
+                       type="checkbox"/>
+                <label htmlFor="powder-day">Powder Day</label>
+            </div>
+
+            <div>
+                <input id="backcountry-day"
+                       ref={input => _backcountry = input}
+                       type="checkbox"/>
+                <label htmlFor="backcountry-day">Backcountry Day</label>
+            </div>
+
+            <button>Add Day</button>
+
+        </form>
+    )
+
+}
+
+AddDay.propTypes = {
+    onNewDay: PropTypes.func
 }

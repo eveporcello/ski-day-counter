@@ -1,5 +1,5 @@
 import { Component } from 'react'
-import { SkiDayList, SkiDayCount } from './ski-days'
+import { SkiDayList, SkiDayCount, AddDay } from './ski-days'
 import { Menu } from './navigation'
 import '../../stylesheets/App.scss'
 
@@ -8,33 +8,28 @@ class App extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            skiDays: [
-                {
-                    resort: "Squaw Valley",
-                    date: new Date("1/2/2016"),
-                    powder: true,
-                    backcountry: false
-                },
-                {
-                    resort: "Mt Tallac",
-                    date: new Date("3/28/2016"),
-                    powder: false,
-                    backcountry: true
-                },
-                {
-                    resort: "Kirkwood",
-                    date: new Date("4/2/2016"),
-                    powder: false,
-                    backcountry: false
-                }
-            ],
+            skiDays: [],
             currentScreen: "home"
         }
         this.goToScreen = this.goToScreen.bind(this)
+        this.addDay = this.addDay.bind(this)
     }
 
-    countDays(days=[], filter) {
+    countDays(days = [], filter) {
         return days.filter(day=> (filter) ? day[filter] : day).length
+    }
+
+    addDay(day) {
+        const skiDays = [
+            ...this.state.skiDays,
+            day
+        ].sort((a, b) =>
+            new Date(a.date) - new Date(b.date)
+        )
+        this.setState({
+            skiDays,
+            currentScreen: 'home'
+        })
     }
 
     goToScreen(currentScreen) {
@@ -48,13 +43,14 @@ class App extends Component {
             backcountryDays = this.countDays(skiDays, 'backcountry')
         return (
             <div className="app">
-                <Menu selected={currentScreen} onNav={this.goToScreen} />
-                {(currentScreen !== 'home') ?
-                    <SkiDayList days={skiDays} /> :
-                    <SkiDayCount total={totalDays}
-                                 powder={powderDays}
-                                 backcountry={backcountryDays} />
-
+                <Menu selected={currentScreen} onNav={this.goToScreen}/>
+                {(currentScreen === 'ski-days') ?
+                    <SkiDayList days={skiDays}/> :
+                    (currentScreen === 'add-day') ?
+                        <AddDay onNewDay={this.addDay}/> :
+                        <SkiDayCount total={totalDays}
+                                     powder={powderDays}
+                                     backcountry={backcountryDays}/>
                 }
             </div>
         )
