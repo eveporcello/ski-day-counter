@@ -1,0 +1,45 @@
+@import "global";
+
+nav.menu {
+  display: flex;
+  justify-content: center;
+  margin: 1em;
+
+  a, span {
+    padding: 1em;
+    font-size: 1.5em;
+
+    border-right: solid 1px $secondary-color;
+    border-left: solid 1px $secondary-color;
+
+    flex-basis: 5em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:first-child {
+      border-radius: .5em 0 0 .5em;
+      border: none;
+      border-right: solid 1px $secondary-color;
+    }
+
+    &:last-child {
+      border-radius: 0 .5em .5em 0;
+      border: none;
+      border-left: solid 1px $secondary-color;
+    }
+
+  }
+
+  span {
+    color: $secondary-color;
+    background-color: $contrast-color;
+  }
+
+  a {
+    color: $contrast-color;
+    text-decoration: none;
+    background-color: $primary-color;
+  }
+
+}
