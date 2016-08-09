@@ -31,7 +31,7 @@ div.ski-day-count {
       font-weight: bold;
       padding: .7em;
       border-radius: 50%;
-      border: solid 3px $constract-color;
+      border: solid 3px $contrast-color;
       @include flex-center;
     }
 
@@ -47,8 +47,7 @@ div.ski-day-count {
 }
 
 div.ski-day-list {
-  height: 100%;
-  width: 100%;
+
   table {
     width: 100%;
     border: solid 1px white;

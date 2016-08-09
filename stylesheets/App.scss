@@ -29,8 +29,10 @@ div.app {
   padding: .5em;
   height: calc(100% - 2em);
   background-color: $secondary-color;
-  color: $constract-color;
+  color: $contrast-color;
+
+  display: flex;
+  flex-direction: column;
 
   @include mainFont;
-  @include flex-center;
 }
