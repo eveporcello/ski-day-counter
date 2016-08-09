@@ -1,69 +1,103 @@
-Ski Day Counter - Display the Ski Day Count
+Ski Day Counter - List the Days
 =================
-Add the First Component, the Ski Day Count.
+Now we will create the day list component and map through an array
 
 Topics
 -------
 
-* basic components
-* stateless functional components
-* propType validation
-* defaultProps
-* react-icons
-
+* propValidation isRequied
+* propValidation .instanceOf
+* custom property validation
+* JavaScript expressions and If/Else expressions
+* mapping an array to components
 
 Steps
 -------
 
-First Add The `<SkiDayCount />`
+Create The `<SkiDayRow />` component
 
 ```javascript
 
-    import '../../stylesheets/ski-days.scss'
-    import { PropTypes } from 'react'
-    import Terrain from 'react-icons/lib/md/terrain'
-    import SnowFlake from 'react-icons/lib/ti/weather-snow'
-    import Calendar from 'react-icons/lib/fa/calendar'
+    const SkiDayRow = ({ resort, date, powder, backcountry }) =>
+        <tr>
+            <td>
+                {date.getMonth() + 1}/{date.getDate()}/{date.getFullYear()}
+            </td>
+            <td>
+                {resort}
+            </td>
+            <td>
+                {(powder) ? <SnowFlake /> : null }
+            </td>
+            <td>
+                {(backcountry) ? <Terrain /> : null }
+            </td>
+        </tr>
     
-    export const SkiDayCount = ({ total=0, powder=0, backcountry=0 }) =>
-        <div className="ski-day-count">
-            <span className="total-days">
-                {total}
-                <Calendar />
-                total
-            </span>
-            <span className="powder-days">
-                {powder}
-                <SnowFlake />
-                powders days
-            </span>
-            <span className="backcountry-days">
-                {backcountry}
-                <Terrain />
-                backcountry days
-            </span>
+    SkiDayRow.propTypes = {
+        resort: PropTypes.string.isRequired,
+        date: PropTypes.instanceOf(Date).isRequired,
+        powder: PropTypes.bool,
+        backcountry: PropTypes.bool
+    }
+```
+
+Create the `<SkiDayList />` component
+```javascript
+    
+    export const SkiDayList = ({ days }) =>
+        <div className="ski-day-list">
+            <table>
+                <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Resort</th>
+                    <th><SnowFlake /></th>
+                    <th><Terrain /></th>
+                </tr>
+                </thead>
+                <tbody>
+                {days.map((day, i) =>
+                    <SkiDayRow key={i} {...day} />
+                )}
+                </tbody>
+            </table>
         </div>
     
-    SkiDayCount.propTypes = {
-        total: PropTypes.number,
-        powder: PropTypes.number,
-        backcountry: PropTypes.number
+    SkiDayList.propTypes = {
+        days: (props) => (!Array.isArray(props.days)) ?
+            new Error("SkiDayList days property must be an array") :
+            (!props.days.length) ?
+                new Error("SkiDayList days array must contain at least one record") :
+                null
     }
 
 ```
 
-Then test it out in the app component
+Modify the app component to display a list of ski dates
 ```javascript
 
-    import { SkiDayCount } from './ski-days'
-    import '../../stylesheets/App.scss'
-    
     const App = () =>
         <div className="app">
-            <SkiDayCount total={10}
-                         powder={3}
-                         backcountry={4} />
+            <SkiDayList days={[
+                {
+                    resort: "Squaw Valley",
+                    date: new Date("1/2/2016"),
+                    powder: true,
+                    backcountry: false
+                },
+                {
+                    resort: "Mt Tallac",
+                    date: new Date("3/28/2016"),
+                    powder: false,
+                    backcountry: true
+                },
+                {
+                    resort: "Kirkwood",
+                    date: new Date("4/2/2016"),
+                    powder: false,
+                    backcountry: false
+                }
+            ]} />
         </div>
-    
-    export default App
 ```

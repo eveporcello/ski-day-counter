@@ -1,12 +1,10 @@
 @import "global";
 
 div.ski-day-count {
-
   display: flex;
   flex-wrap: wrap;
 
   >span {
-
     position: relative;
     margin: 2em;
     @include flex-center;
@@ -19,6 +17,7 @@ div.ski-day-count {
       >span:first-child {
         left: calc(50% - 4.4em);
       }
+
     }
 
     >span:first-child {
@@ -44,7 +43,58 @@ div.ski-day-count {
       font-size: 4em;
       margin: .2em;
     }
+  }
+}
+
+div.ski-day-list {
+  height: 100%;
+  width: 100%;
+  table {
+    width: 100%;
+    border: solid 1px white;
+
+    td {
+      text-align: center;
+    }
+
+    thead>tr {
+      background-color: white;
+      color: $secondary-color;
+    }
+
+    tbody {
+
+      thead {
+        tr>th {
+          height: 3em;
+        }
+      }
+
+      tbody {
+
+      }
+
+      tr {
+
+        td {
+          height: 2em;
+          &:nth-child(3),
+          &:nth-child(4) {
+            width: 2em;
+          }
+        }
+
+
+        &:nth-child(odd) {
+          background-color: $primary-color;
+        }
+
+        &:nth-child(eve) {
+          background-color: white;
+        }
+
+      }
+    }
 
   }
-
 }
