@@ -1,0 +1,50 @@
+@import "global";
+
+div.ski-day-count {
+
+  display: flex;
+  flex-wrap: wrap;
+
+  >span {
+
+    position: relative;
+    margin: 2em;
+    @include flex-center;
+
+    &.total-days {
+      flex-basis: 100%;
+      font-size: 200%;
+      text-align: center;
+
+      >span:first-child {
+        left: calc(50% - 4.4em);
+      }
+    }
+
+    >span:first-child {
+      position: absolute;
+      bottom: 2px;
+      left: -8px;
+      height: 1em;
+      min-width: 1em;
+      background-color: $secondary-color;
+      color: white;
+      font-weight: bold;
+      padding: .7em;
+      border-radius: 50%;
+      border: solid 3px $constract-color;
+      @include flex-center;
+    }
+
+    &:not(:first-child) {
+      flex-basis: calc(50% - 4em)
+    }
+
+    svg {
+      font-size: 4em;
+      margin: .2em;
+    }
+
+  }
+
+}

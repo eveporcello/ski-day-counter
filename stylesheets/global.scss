@@ -2,6 +2,15 @@ $primary-color: #3162ff;
 $secondary-color: #14355a;
 $constract-color: rgb(221, 204, 41);
 
+$break-sm: 500px;
+$break-md: 1000px;
+
 @mixin mainFont {
   font-family: Verdana, sans-serif;
+}
+
+@mixin flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

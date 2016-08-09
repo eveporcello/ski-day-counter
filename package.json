@@ -1,6 +1,6 @@
 {
   "name": "ski-day-counter",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "A sample React application for use in lynda.com's React Essential Training with Eve Porcello",
   "main": "index.js",
   "scripts": {
@@ -41,6 +41,7 @@
   "dependencies": {
     "httpster": "^1.0.3",
     "react": "^0.14.8",
-    "react-dom": "^0.14.6"
+    "react-dom": "^0.14.6",
+    "react-icons": "^2.2.1"
   }
 }
