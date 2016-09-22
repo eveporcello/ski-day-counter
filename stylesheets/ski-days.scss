@@ -97,3 +97,54 @@ div.ski-day-list {
 
   }
 }
+
+form.add-day {
+  width: 70%;
+  margin-left: 15%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: stretch;
+
+  >label,
+  div {
+    margin: 1em 0;
+  }
+
+  label {
+    @include mainFont;
+    font-size: 1.5em;
+  }
+
+  input[type="text"],
+  input[type="date"] {
+    @include mainFont;
+    font-size: 1.5em;
+    padding: .25em;
+    border-radius: .2em;
+    outline: none
+  }
+
+  input[type="checkbox"] {
+    transform: scale(2);
+    margin: 0;
+    padding: 0;
+    margin-right: 2em;
+  }
+
+  div>label {
+    position: relative;
+    top: 2px;
+  }
+
+  button {
+    @include mainFont;
+    padding: 1em;
+    color: $secondary-color;
+    background-color: $contrast-color;
+    font-size: 1.5em;
+    border-radius: .25em;
+    margin-top: 1em;
+  }
+
+}

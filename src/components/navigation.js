@@ -22,6 +22,10 @@ export const Menu = ({ selected="home", onNav=f=>f }) =>
               onClick={() => onNav("home")}>
             Home
         </Link>
+        <Link select={selected === 'add-day'}
+              onClick={() => onNav("add-day")}>
+            Add Day
+        </Link>
         <Link select={selected === 'ski-days'}
               onClick={() => onNav("ski-days")}>
             Ski Days

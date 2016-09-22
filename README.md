@@ -1,15 +1,12 @@
-Ski Day Counter - App Component State
+Ski Day Counter - Adding Ski days
 =================
-This next step adds `<Menu />`, `<Link />`, and converts the `<App />` component to a class that contains state.
+This next step adds `<AddDay />`, and adds new ski day info to the array
 
 Topics
 -------
 
-* class components
-* constructor, super
-* state, setState
-* binding methods in the constructor
-* destructuring in render method
-* showing and hiding data with if statements
-* explicitly passing state data to children as props
-* two way data binding callback functions
+* refs
+* two way function binding
+* immutable arrays
+* sorting arrays
+* setState
