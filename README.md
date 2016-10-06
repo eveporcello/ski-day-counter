@@ -7,3 +7,22 @@ Topics
 
 * style object
 * recording errors
+
+
+Missing Functionality
+------------------
+
+* ski day page filters
+* autocomplete
+
+
+Missing Topoics
+------------
+
+* lifecycle functions
+    * mounting
+    * updating
+    
+* React Router
+
+* Redux

@@ -7,7 +7,7 @@
     "lint": "./node_modules/.bin/eslint .",
     "build": "./node_modules/.bin/webpack --progress",
     "prestart": "npm run build",
-    "start": "./node_modules/.bin/httpster -d ./dist/ -p 3000",
+    "start": "node ./server",
     "dev": "open http://localhost:3000 & ./node_modules/.bin/webpack-dev-server"
   },
   "keywords": [
@@ -39,6 +39,7 @@
     "webpack-dev-server": "^1.14.1"
   },
   "dependencies": {
+    "express": "^4.14.0",
     "httpster": "^1.0.3",
     "react": "^0.14.8",
     "react-dom": "^0.14.6",
