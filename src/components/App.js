@@ -5,34 +5,63 @@ import '../../stylesheets/App.scss'
 
 class App extends Component {
 
+    //
+    //  TODO: depericate currentScreen, replace with router
+    //
+
     constructor(props) {
         super(props)
         this.state = {
-            skiDays: [],
+            skiDays: [
+                {
+                    "resort": "squaw valley",
+                    "date": "2016-10-09",
+                    "powder": false,
+                    "backcountry": false
+                },
+                {
+                    "resort": "Heavenly",
+                    "date": "2016-10-05",
+                    "powder": true,
+                    "backcountry": false
+                },
+                {
+                    "resort": "kirkwood",
+                    "date": "2016-10-04",
+                    "powder": true,
+                    "backcountry": false
+                },
+                {
+                    "resort": "squaw valley",
+                    "date": "2016-10-03",
+                    "powder": false,
+                    "backcountry": false
+                }
+            ],
             currentScreen: "home",
-            errors: []
+            errors: [],
+            goal: 10
         }
         this.goToScreen = this.goToScreen.bind(this)
         this.addDay = this.addDay.bind(this)
+        this.setGoal = this.setGoal.bind(this)
         this.clearErrorAt = this.clearErrorAt.bind(this)
+        this.countDays = this.countDays.bind(this)
     }
 
-    countDays(days = [], filter) {
-        return days.filter(day=> (filter) ? day[filter] : day).length
+    countDays(filter) {
+        return this.state.skiDays.filter(day=> (filter) ? day[filter] : day).length
     }
 
-    addDay(day) {
+    addDay(newDay) {
 
-        const allDates = this.state.skiDays.map(d=>d.date),
-            allResorts = this.state.skiDays.map(d=>d.resort),
-            hasDate = allDates.some(d=>d === day.date),
-            hasResort = allResorts.some(r=>r.toLowerCase() === day.resort.toLowerCase())
+        const alreadySkied = this.state.skiDays.some(day => day.date === newDay.date)
 
-        if (hasDate && hasResort) {
+        if (alreadySkied) {
             this.setState({
                 errors: [
                     ...this.state.errors,
-                    new Error(`You already skied at ${day.resort} on ${day.date}`)
+                    new Error(`You already skied on ${newDay.date}`)
                 ]
             })
         } else {
@@ -40,14 +69,10 @@ class App extends Component {
                 currentScreen: 'home',
                 skiDays: [
                     ...this.state.skiDays,
-                    day
+                    newDay
                 ].sort((a, b) => new Date(b.date) - new Date(a.date))
             })
         }
-    }
-
-    goToScreen(currentScreen) {
-        this.setState({currentScreen})
     }
 
     clearErrorAt(index) {
@@ -55,23 +80,39 @@ class App extends Component {
         this.setState({errors})
     }
 
+    setGoal(goal) {
+        this.setState({goal})
+    }
+
+    //
+    //  TODO: depricate currentScreen
+    //
+
+    goToScreen(currentScreen) {
+        this.setState({currentScreen})
+    }
+
     render() {
-        const { currentScreen, skiDays, errors } = this.state,
-            totalDays = this.countDays(skiDays),
-            powderDays = this.countDays(skiDays, 'powder'),
-            backcountryDays = this.countDays(skiDays, 'backcountry')
+
+        const { currentScreen, errors, skiDays, goal } = this.state,
+            totalDays = skiDays.length,
+            powderDays = this.countDays('powder'),
+            backcountryDays = this.countDays('backcountry')
+
         return (
             <div className="app">
 
-                <Menu selected={currentScreen} onNav={this.goToScreen}/>
+                <Menu selected={currentScreen} goal={goal} onNav={this.goToScreen}/>
 
                 {(currentScreen === 'ski-days') ?
                     <SkiDayList days={skiDays}/> :
                     (currentScreen === 'add-day') ?
                         <AddDay onNewDay={this.addDay}/> :
                         <SkiDayCount total={totalDays}
+                                     goal={goal}
                                      powder={powderDays}
-                                     backcountry={backcountryDays}/>
+                                     backcountry={backcountryDays}
+                                     newGoal={this.setGoal} />
                 }
 
                 {(errors.length) ?
@@ -79,7 +120,7 @@ class App extends Component {
                         <ShowError key={i}
                                    onClose={() => this.clearErrorAt(i)}
                                    message={err.message}
-                                   offset={i*3} />
+                                   offset={i*3}/>
                     ) : null
                 }
             </div>

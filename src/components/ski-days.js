@@ -4,13 +4,38 @@ import Terrain from 'react-icons/lib/md/terrain'
 import SnowFlake from 'react-icons/lib/ti/weather-snow'
 import Calendar from 'react-icons/lib/fa/calendar'
 
-export const SkiDayCount = ({ total=0, powder=0, backcountry=0 }) =>
+const decimalToPercent = decimal => Math.floor(decimal*100) + '%'
+
+const calcGoalProgress = (total, goal) => decimalToPercent(total/goal)
+
+
+export const GoalSetter = ({goal, newGoal=f=>f}) => {
+
+    let _input
+    const change = () => newGoal(_input.value)
+
+    return (
+        <div className="goal-setter">
+            <input type="number"
+                   ref={el=>_input = el}
+                   defaultValue={goal}
+                   onChange={change} />
+        </div>
+    )
+}
+
+
+export const SkiDayCount = ({ total=0, powder=0, backcountry=0, goal, newGoal }) =>
     <div className="ski-day-count">
         <span className="total-days">
             {total}
             <Calendar />
             total
         </span>
+        <div className="goal-progress">
+            {calcGoalProgress(total, goal)} complete!
+            <GoalSetter goal={goal} newGoal={newGoal} />
+        </div>
         <span className="powder-days">
             {powder}
             <SnowFlake />
@@ -26,7 +51,8 @@ export const SkiDayCount = ({ total=0, powder=0, backcountry=0 }) =>
 SkiDayCount.propTypes = {
     total: PropTypes.number,
     powder: PropTypes.number,
-    backcountry: PropTypes.number
+    backcountry: PropTypes.number,
+    goal: PropTypes.number.isRequired
 }
 
 const SkiDayRow = ({ resort, date, powder, backcountry }) =>
