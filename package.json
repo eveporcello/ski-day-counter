@@ -7,7 +7,7 @@
     "lint": "./node_modules/.bin/eslint .",
     "build": "./node_modules/.bin/webpack --progress",
     "prestart": "npm run build",
-    "start": "node ./server",
+    "start": "node ./server --port 3333 --delay 500",
     "dev": "open http://localhost:3000 & ./node_modules/.bin/webpack-dev-server"
   },
   "keywords": [
@@ -28,6 +28,7 @@
     "babel-preset-es2015": "^6.3.13",
     "babel-preset-react": "^6.3.13",
     "babel-preset-stage-0": "^6.3.13",
+    "cors": "^2.8.1",
     "css-loader": "^0.23.1",
     "eslint": "^3.2.2",
     "eslint-plugin-react": "^6.0.0",
@@ -40,7 +41,7 @@
   },
   "dependencies": {
     "express": "^4.14.0",
-    "httpster": "^1.0.3",
+    "isomorphic-fetch": "^2.2.1",
     "react": "^15.3.2",
     "react-dom": "^0.14.6",
     "react-icons": "^2.2.1",

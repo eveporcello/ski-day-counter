@@ -4,6 +4,7 @@ import Terrain from 'react-icons/lib/md/terrain'
 import SnowFlake from 'react-icons/lib/ti/weather-snow'
 import Calendar from 'react-icons/lib/fa/calendar'
 import { Link, withRouter } from 'react-router'
+import Autocomplete from './Autocomplete'
 
 export const SkiDayCount = ({ total=0, powder=0, backcountry=0, goal, newGoal }) =>
     <div className="ski-day-count">
@@ -49,7 +50,7 @@ const SkiDayRow = ({ resort, date, powder, backcountry }) =>
 
 SkiDayRow.propTypes = {
     resort: PropTypes.string.isRequired,
-    date: PropTypes.instanceOf(Date).isRequired,
+    date: PropTypes.string.isRequired,
     powder: PropTypes.bool,
     backcountry: PropTypes.bool
 }
@@ -126,9 +127,8 @@ export const AddDay = withRouter(({ onNewDay=f=>f, router}) => {
         <form onSubmit={submit} className="add-day">
 
             <label htmlFor="date">Resort Name</label>
-            <input type="text"
-                   ref={input => _resort = input}
-                   required/>
+
+            <Autocomplete ref={input => _resort = input} feed="http://localhost:3333/resorts/"/>
 
             <label htmlFor="date">Date</label>
             <input id="date"
