@@ -1,29 +1,9 @@
 import '../../stylesheets/ski-days.scss'
-import { PropTypes } from 'react'
+import { PropTypes, Component } from 'react'
 import Terrain from 'react-icons/lib/md/terrain'
 import SnowFlake from 'react-icons/lib/ti/weather-snow'
 import Calendar from 'react-icons/lib/fa/calendar'
 import { Link, withRouter } from 'react-router'
-
-const decimalToPercent = decimal => Math.floor(decimal * 100) + '%'
-
-const calcGoalProgress = (total, goal) => decimalToPercent(total / goal)
-
-
-export const GoalSetter = ({goal, newGoal=f=>f}) => {
-
-    let _input
-    const change = () => newGoal(_input.value)
-
-    return (
-        <div className="goal-setter">
-            <input type="number"
-                   ref={el=>_input = el}
-                   defaultValue={goal}
-                   onChange={change}/>
-        </div>
-    )
-}
 
 export const SkiDayCount = ({ total=0, powder=0, backcountry=0, goal, newGoal }) =>
     <div className="ski-day-count">
@@ -32,10 +12,6 @@ export const SkiDayCount = ({ total=0, powder=0, backcountry=0, goal, newGoal })
             <Calendar />
             total
         </span>
-        <div className="goal-progress">
-            {calcGoalProgress(total, goal)} complete!
-            <GoalSetter goal={goal} newGoal={newGoal}/>
-        </div>
         <span className="powder-days">
             {powder}
             <SnowFlake />

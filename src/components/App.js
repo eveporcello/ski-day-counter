@@ -1,5 +1,6 @@
 import { Component } from 'react'
 import { SkiDayList, SkiDayCount, AddDay } from './ski-days'
+import GoalProgress from './GoalProgress'
 import { Menu, ShowError } from './navigation'
 import '../../stylesheets/App.scss'
 
@@ -7,42 +8,13 @@ class App extends Component {
 
     constructor(props) {
         super(props)
-        this.state = {
-            skiDays: [
-                {
-                    "resort": "squaw valley",
-                    "date": "2016-10-09",
-                    "powder": false,
-                    "backcountry": false
-                },
-                {
-                    "resort": "Heavenly",
-                    "date": "2016-10-05",
-                    "powder": true,
-                    "backcountry": false
-                },
-                {
-                    "resort": "kirkwood",
-                    "date": "2016-10-04",
-                    "powder": true,
-                    "backcountry": false
-                },
-                {
-                    "resort": "squaw valley",
-                    "date": "2016-10-03",
-                    "powder": false,
-                    "backcountry": false
-                },
-                {
-                    "resort": "castle peak",
-                    "date": "2016-10-01",
-                    "powder": false,
-                    "backcountry": true
-                }
-            ],
-            errors: [],
-            goal: 10
-        }
+        this.state = (localStorage.skiDayState) ?
+            JSON.parse(localStorage.skiDayState) :
+            {
+                skiDays: [],
+                errors: [],
+                goal: 10
+            }
         this.addDay = this.addDay.bind(this)
         this.setGoal = this.setGoal.bind(this)
         this.clearErrorAt = this.clearErrorAt.bind(this)
@@ -82,6 +54,14 @@ class App extends Component {
         this.setState({goal})
     }
 
+    componentDidUpdate() {
+        localStorage.skiDayState = JSON.stringify(this.state)
+    }
+
+    componentDidMount() {
+        localStorage.skiDayState = JSON.stringify(this.state)
+    }
+
     render() {
 
         const { skiDays, goal, errors } = this.state,
@@ -99,11 +79,10 @@ class App extends Component {
                     <SkiDayCount total={totalDays}
                                  goal={goal}
                                  powder={powderDays}
-                                 backcountry={backcountryDays}
-                                 newGoal={this.setGoal}/> :
+                                 backcountry={backcountryDays}/> :
                     (location.pathname === '/add-day') ?
                         <AddDay onNewDay={this.addDay}/> :
-                        <SkiDayList days={skiDays} filter={params.filter} />
+                        <SkiDayList days={skiDays} filter={params.filter}/>
                 }
 
                 {(errors.length) ?
@@ -114,6 +93,9 @@ class App extends Component {
                                    offset={i*3}/>
                     ) : null
                 }
+
+                <GoalProgress current={skiDays.length} goal={goal} save={this.setGoal}/>
+
             </div>
         )
     }
