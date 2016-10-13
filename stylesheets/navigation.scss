@@ -31,7 +31,7 @@ nav.menu {
 
   }
 
-  span {
+  a.selected {
     color: $secondary-color;
     background-color: $contrast-color;
   }

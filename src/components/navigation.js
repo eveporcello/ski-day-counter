@@ -1,6 +1,14 @@
 import { PropTypes } from 'react'
+import { Link } from 'react-router'
 import CloseButton from 'react-icons/lib/fa/close'
 import '../../stylesheets/navigation.scss'
+
+export const Menu = () =>
+    <nav className="menu">
+        <Link to="/" activeClassName="selected">Home</Link>
+        <Link to="/add-day" activeClassName="selected">Add Day</Link>
+        <Link to="/ski-days" activeClassName="selected">Ski Days</Link>
+    </nav>
 
 export const ShowError = ({ message, onClose=f=>f, offset=0 }) =>
     <div className="error" style={{ bottom: offset }}>
@@ -14,39 +22,8 @@ ShowError.propTypes = {
     offset: PropTypes.number
 }
 
-export const Link = ({ children, select=false, onClick=f=>f }) =>
-    (select) ?
-        <span>{children}</span> :
-        <a href="#"
-           onClick={e => {
-               e.preventDefault()
-               onClick()
-        }}>{children}</a>
-
-Link.propTypes = {
-    text: PropTypes.string.isRequired,
-    selected: PropTypes.bool,
-    onClick: PropTypes.func
-}
-
-export const Menu = ({ selected="home", onNav=f=>f }) =>
-    <nav className="menu">
-        <Link select={selected === 'home'}
-              onClick={() => onNav("home")}>
-            Home
-        </Link>
-        <Link select={selected === 'add-day'}
-              onClick={() => onNav("add-day")}>
-            Add Day
-        </Link>
-        <Link select={selected === 'ski-days'}
-              onClick={() => onNav("ski-days")}>
-            Ski Days
-        </Link>
-    </nav>
-
-Menu.propTypes = {
-    selected: PropTypes.string,
-    onNav: PropTypes.func,
-    children: PropTypes.string.isRequired
-}
+export const Whoops404 = ({ location }) =>
+    <div className="whoops-404">
+        <h1>Whoops, route not found</h1>
+        <p>Cannot find content for {location.pathname}</p>
+    </div>

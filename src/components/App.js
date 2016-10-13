@@ -5,10 +5,6 @@ import '../../stylesheets/App.scss'
 
 class App extends Component {
 
-    //
-    //  TODO: depericate currentScreen, replace with router
-    //
-
     constructor(props) {
         super(props)
         this.state = {
@@ -36,13 +32,17 @@ class App extends Component {
                     "date": "2016-10-03",
                     "powder": false,
                     "backcountry": false
+                },
+                {
+                    "resort": "castle peak",
+                    "date": "2016-10-01",
+                    "powder": false,
+                    "backcountry": true
                 }
             ],
-            currentScreen: "home",
             errors: [],
             goal: 10
         }
-        this.goToScreen = this.goToScreen.bind(this)
         this.addDay = this.addDay.bind(this)
         this.setGoal = this.setGoal.bind(this)
         this.clearErrorAt = this.clearErrorAt.bind(this)
@@ -54,9 +54,7 @@ class App extends Component {
     }
 
     addDay(newDay) {
-
         const alreadySkied = this.state.skiDays.some(day => day.date === newDay.date)
-
         if (alreadySkied) {
             this.setState({
                 errors: [
@@ -84,17 +82,10 @@ class App extends Component {
         this.setState({goal})
     }
 
-    //
-    //  TODO: depricate currentScreen
-    //
-
-    goToScreen(currentScreen) {
-        this.setState({currentScreen})
-    }
-
     render() {
 
-        const { currentScreen, errors, skiDays, goal } = this.state,
+        const { skiDays, goal, errors } = this.state,
+            { location, params } = this.props,
             totalDays = skiDays.length,
             powderDays = this.countDays('powder'),
             backcountryDays = this.countDays('backcountry')
@@ -102,17 +93,17 @@ class App extends Component {
         return (
             <div className="app">
 
-                <Menu selected={currentScreen} goal={goal} onNav={this.goToScreen}/>
+                <Menu goal={goal} onNav={this.goToScreen}/>
 
-                {(currentScreen === 'ski-days') ?
-                    <SkiDayList days={skiDays}/> :
-                    (currentScreen === 'add-day') ?
+                {(location.pathname === '/') ?
+                    <SkiDayCount total={totalDays}
+                                 goal={goal}
+                                 powder={powderDays}
+                                 backcountry={backcountryDays}
+                                 newGoal={this.setGoal}/> :
+                    (location.pathname === '/add-day') ?
                         <AddDay onNewDay={this.addDay}/> :
-                        <SkiDayCount total={totalDays}
-                                     goal={goal}
-                                     powder={powderDays}
-                                     backcountry={backcountryDays}
-                                     newGoal={this.setGoal} />
+                        <SkiDayList days={skiDays} filter={params.filter} />
                 }
 
                 {(errors.length) ?

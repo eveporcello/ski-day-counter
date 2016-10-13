@@ -3,10 +3,11 @@ import { PropTypes } from 'react'
 import Terrain from 'react-icons/lib/md/terrain'
 import SnowFlake from 'react-icons/lib/ti/weather-snow'
 import Calendar from 'react-icons/lib/fa/calendar'
+import { Link, withRouter } from 'react-router'
 
-const decimalToPercent = decimal => Math.floor(decimal*100) + '%'
+const decimalToPercent = decimal => Math.floor(decimal * 100) + '%'
 
-const calcGoalProgress = (total, goal) => decimalToPercent(total/goal)
+const calcGoalProgress = (total, goal) => decimalToPercent(total / goal)
 
 
 export const GoalSetter = ({goal, newGoal=f=>f}) => {
@@ -19,11 +20,10 @@ export const GoalSetter = ({goal, newGoal=f=>f}) => {
             <input type="number"
                    ref={el=>_input = el}
                    defaultValue={goal}
-                   onChange={change} />
+                   onChange={change}/>
         </div>
     )
 }
-
 
 export const SkiDayCount = ({ total=0, powder=0, backcountry=0, goal, newGoal }) =>
     <div className="ski-day-count">
@@ -34,7 +34,7 @@ export const SkiDayCount = ({ total=0, powder=0, backcountry=0, goal, newGoal })
         </span>
         <div className="goal-progress">
             {calcGoalProgress(total, goal)} complete!
-            <GoalSetter goal={goal} newGoal={newGoal} />
+            <GoalSetter goal={goal} newGoal={newGoal}/>
         </div>
         <span className="powder-days">
             {powder}
@@ -78,26 +78,47 @@ SkiDayRow.propTypes = {
     backcountry: PropTypes.bool
 }
 
-export const SkiDayList = ({ days }) =>
-    <div className="ski-day-list">
-        <table>
-            <thead>
-            <tr>
-                <th>Date</th>
-                <th>Resort</th>
-                <th><SnowFlake /></th>
-                <th><Terrain /></th>
-            </tr>
-            </thead>
-            <tbody>
-            {days.map((day, i) =>
-                <SkiDayRow key={i} {...day} />
-            )}
-            </tbody>
-        </table>
-    </div>
+export const SkiDayList = ({ days, filter}) => {
+
+    const filteredDays = (!filter || !filter.match(/powder|backcountry/)) ?
+        days :
+        days.filter(day => day[filter])
+
+    const activeFilterStyle = {
+        textDecoration: 'none',
+        color: 'black'
+    }
+
+    return (
+        <div className="ski-day-list">
+            <table>
+                <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Resort</th>
+                    <th><SnowFlake /></th>
+                    <th><Terrain /></th>
+                </tr>
+                <tr>
+                    <td colSpan={4}>
+                        <Link to="/ski-days" style={(!filter) ? activeFilterStyle : null}>All Days</Link>
+                        <Link to="/ski-days/powder" activeStyle={activeFilterStyle}>Powder Days</Link>
+                        <Link to="/ski-days/backcountry" activeStyle={activeFilterStyle}>Backcountry Days</Link>
+                    </td>
+                </tr>
+                </thead>
+                <tbody>
+                {filteredDays.map((day, i) =>
+                    <SkiDayRow key={i} {...day} />
+                )}
+                </tbody>
+            </table>
+        </div>
+    )
+}
 
 SkiDayList.propTypes = {
+    filter: PropTypes.oneOf(['powder', 'backcountry']),
     days: (props) => (!Array.isArray(props.days)) ?
         new Error("SkiDayList days property must be an array") :
         (!props.days.length) ?
@@ -105,7 +126,7 @@ SkiDayList.propTypes = {
             null
 }
 
-export const AddDay = ({ onNewDay=f=>f}) => {
+export const AddDay = withRouter(({ onNewDay=f=>f, router}) => {
 
     let _resort, _date, _powder, _backcountry
 
@@ -121,6 +142,8 @@ export const AddDay = ({ onNewDay=f=>f}) => {
         _date.value = ''
         _powder.checked = false
         _backcountry.checked = false
+
+        router.push('/')
     }
 
     return (
@@ -155,8 +178,7 @@ export const AddDay = ({ onNewDay=f=>f}) => {
 
         </form>
     )
-
-}
+})
 
 AddDay.propTypes = {
     onNewDay: PropTypes.func
