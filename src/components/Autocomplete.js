@@ -84,7 +84,8 @@ class Autocomplete extends Component {
                 changeSuggestions } = this,
             { fetching } = this.state,
             firstLetter = this.value[0],
-            url = this.props.feed + firstLetter
+            { feed, onError } = this.props,
+            url = feed + firstLetter
 
         if (this.value.length && !fetching) {
             if (letterIsInCache(firstLetter)) {
@@ -95,6 +96,7 @@ class Autocomplete extends Component {
                     .then(response => response.json())
                     .then(terms => cacheResponse(firstLetter, terms))
                     .then(() => suggest(this.value))
+                    .catch(({message}) => onError(`Could not obtain suggestions from ${feed}`))
             }
         }
         else {
@@ -122,7 +124,7 @@ class Autocomplete extends Component {
                        onChange={getSuggestion}
                        onFocus={getSuggestion}
                        onBlur={() =>
-                            setTimeout(() => changeSuggestions([]), 100)
+                            setTimeout(() => changeSuggestions([]), 250)
                        }
                 />
 
@@ -136,6 +138,15 @@ class Autocomplete extends Component {
         )
     }
 
+}
+
+Autocomplete.defaultProps = {
+    onError: f=>f
+}
+
+Autocomplete.propTypes = {
+    onError: PropTypes.func,
+    feed: PropTypes.string.isRequired
 }
 
 export default Autocomplete

@@ -103,7 +103,7 @@ SkiDayList.propTypes = {
             null
 }
 
-export const AddDay = withRouter(({ onNewDay=f=>f, router}) => {
+export const AddDay = withRouter(({ onNewDay=f=>f, onError=f=>f, router}) => {
 
     let _resort, _date, _powder, _backcountry
 
@@ -115,12 +115,19 @@ export const AddDay = withRouter(({ onNewDay=f=>f, router}) => {
             powder: _powder.checked,
             backcountry: _backcountry.checked
         })
+
+
+        const addAnother = confirm(`${_resort.value} on ${_date.value.toString()} added. Add another?`)
+
+        if (!addAnother) {
+            router.push('/')
+        }
+
         _resort.value = ''
         _date.value = ''
         _powder.checked = false
         _backcountry.checked = false
 
-        router.push('/')
     }
 
     return (
@@ -128,7 +135,8 @@ export const AddDay = withRouter(({ onNewDay=f=>f, router}) => {
 
             <label htmlFor="date">Resort Name</label>
 
-            <Autocomplete ref={input => _resort = input} feed="http://localhost:3333/resorts/"/>
+            <Autocomplete ref={input => _resort = input} feed="http://localhost:3333/resorts/"
+                          onError={onError}/>
 
             <label htmlFor="date">Date</label>
             <input id="date"
@@ -157,5 +165,6 @@ export const AddDay = withRouter(({ onNewDay=f=>f, router}) => {
 })
 
 AddDay.propTypes = {
-    onNewDay: PropTypes.func
+    onNewDay: PropTypes.func,
+    onError: PropTypes.func
 }

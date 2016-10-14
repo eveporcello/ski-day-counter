@@ -1,4 +1,5 @@
 import { Component, propTypes } from 'react'
+import { equals } from 'ramda'
 
 class GoalProgress extends Component {
 
@@ -18,6 +19,10 @@ class GoalProgress extends Component {
                 progress: this.calcGoalProgress(nextProps.current, this.props.goal) || 0
             })
         }
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
+        return !equals(nextState, this.state) || !equals(nextProps, this.props)
     }
 
     newGoal() {

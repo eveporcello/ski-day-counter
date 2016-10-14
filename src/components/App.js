@@ -2,6 +2,7 @@ import { Component } from 'react'
 import { SkiDayList, SkiDayCount, AddDay } from './ski-days'
 import GoalProgress from './GoalProgress'
 import { Menu, ShowError } from './navigation'
+import { equals } from 'ramda'
 import '../../stylesheets/App.scss'
 
 class App extends Component {
@@ -10,13 +11,14 @@ class App extends Component {
         super(props)
         this.state = (localStorage.skiDayState) ?
             JSON.parse(localStorage.skiDayState) :
-            {
-                skiDays: [],
-                errors: [],
-                goal: 10
-            }
+        {
+            skiDays: [],
+            errors: [],
+            goal: 10
+        }
         this.addDay = this.addDay.bind(this)
         this.setGoal = this.setGoal.bind(this)
+        this.addError = this.addError.bind(this)
         this.clearErrorAt = this.clearErrorAt.bind(this)
         this.countDays = this.countDays.bind(this)
     }
@@ -28,12 +30,7 @@ class App extends Component {
     addDay(newDay) {
         const alreadySkied = this.state.skiDays.some(day => day.date === newDay.date)
         if (alreadySkied) {
-            this.setState({
-                errors: [
-                    ...this.state.errors,
-                    new Error(`You already skied on ${newDay.date}`)
-                ]
-            })
+            this.addError(`You already skied on ${newDay.date}`)
         } else {
             this.setState({
                 currentScreen: 'home',
@@ -45,6 +42,15 @@ class App extends Component {
         }
     }
 
+    addError(message) {
+        this.setState({
+            errors: [
+                ...this.state.errors,
+                new Error(message)
+            ]
+        })
+    }
+
     clearErrorAt(index) {
         const errors = this.state.errors.filter((err, i) => index !== i)
         this.setState({errors})
@@ -54,11 +60,20 @@ class App extends Component {
         this.setState({goal})
     }
 
-    componentDidUpdate() {
-        localStorage.skiDayState = JSON.stringify(this.state)
+    componentWillMount() {
+        this.handleError = ({message}) => this.addError(`Something went wrong ${message}`)
+        window.addEventListener("error", this.handleError)
     }
 
     componentDidMount() {
+        localStorage.skiDayState = JSON.stringify(this.state)
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener("error", this.handleError)
+    }
+
+    componentDidUpdate() {
         localStorage.skiDayState = JSON.stringify(this.state)
     }
 
@@ -81,7 +96,7 @@ class App extends Component {
                                  powder={powderDays}
                                  backcountry={backcountryDays}/> :
                     (location.pathname === '/add-day') ?
-                        <AddDay onNewDay={this.addDay}/> :
+                        <AddDay onNewDay={this.addDay} onError={this.addError} /> :
                         <SkiDayList days={skiDays} filter={params.filter}/>
                 }
 
