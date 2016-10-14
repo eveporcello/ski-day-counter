@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "lint": "./node_modules/.bin/eslint .",
+    "analyze": "./node_modules/.bin/webpack --json | webpack-bundle-size-analyzer",
     "build": "./node_modules/.bin/webpack --progress",
     "prestart": "npm run build",
     "start": "node ./server --port 3333 --delay 500",
@@ -37,6 +38,7 @@
     "sass-loader": "^3.2.0",
     "style-loader": "^0.13.0",
     "webpack": "^1.12.12",
+    "webpack-bundle-size-analyzer": "^2.2.0",
     "webpack-dev-server": "^1.14.1"
   },
   "dependencies": {
