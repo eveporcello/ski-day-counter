@@ -20,9 +20,9 @@ div.goal-progress {
 
   width: 95%;
   margin: 0 2.5%;
-  font-size: 3em;
+  font-size: 2em;
   position: absolute;
-  bottom: 3em;
+  bottom: 5em;
   display: flex;
   font-family: verdana;
   justify-content: space-between;
@@ -40,12 +40,26 @@ div.goal-progress {
     background: none;
     border: none;
     position: relative;
-    width: 1.5em;
+    width: 2em;
     font-size: 1em;
     padding: 0;
     left: 9px;
     outline: none;
     text-shadow: 2px 2px 10px $snow-white;
+  }
+
+  button {
+
+    font-size: .75em;
+    padding: .25em;
+    background-color: green;
+    color: white;
+
+    &:disabled {
+      background-color: lightgrey;
+      color: #bababa;
+    }
+
   }
 
 }

@@ -1,5 +1,6 @@
 import { Component, propTypes } from 'react'
 import { equals } from 'ramda'
+import SaveIcon from 'react-icons/lib/fa/floppy-o'
 
 class GoalProgress extends Component {
 
@@ -47,16 +48,17 @@ class GoalProgress extends Component {
             { current, goal: savedGoal, save } = this.props
 
         return (
-            <div className="goal-setter">
+            <div className="goal-progress">
                 <progress value={current} max={goal}/>
-                {progress}% complete!
+                {progress}%
                 <input type="number"
                        ref="_goalNumber"
                        defaultValue={goal}
                        onChange={this.newGoal}/>
                 {(save) ?
                     <button disabled={goal === savedGoal}
-                            onClick={this.saveGoal}>save
+                            onClick={this.saveGoal}>
+                        <SaveIcon />
                     </button> :
                     null
                 }

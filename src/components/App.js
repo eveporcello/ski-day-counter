@@ -21,6 +21,7 @@ class App extends Component {
         this.addError = this.addError.bind(this)
         this.clearErrorAt = this.clearErrorAt.bind(this)
         this.countDays = this.countDays.bind(this)
+        this.removeDay = this.removeDay.bind(this)
     }
 
     countDays(filter) {
@@ -40,6 +41,11 @@ class App extends Component {
                 ]
             })
         }
+    }
+
+    removeDay(day) {
+        const skiDays = this.state.skiDays.filter(({date}) => date !== day)
+        this.setState({skiDays})
     }
 
     addError(message) {
@@ -97,7 +103,7 @@ class App extends Component {
                                  backcountry={backcountryDays}/> :
                     (location.pathname === '/add-day') ?
                         <AddDayForm onNewDay={this.addDay} onError={this.addError} /> :
-                        <SkiDayList days={skiDays} filter={params.filter}/>
+                        <SkiDayList days={skiDays} filter={params.filter} onRemoveDay={this.removeDay} />
                 }
 
                 {(errors.length) ?
