@@ -4,36 +4,59 @@ import Terrain from 'react-icons/lib/md/terrain'
 import SnowFlake from 'react-icons/lib/ti/weather-snow'
 import Calendar from 'react-icons/lib/fa/calendar'
 import { Link, withRouter } from 'react-router'
-import Autocomplete from './Autocomplete'
 
-export const SkiDayCount = ({ total=0, powder=0, backcountry=0, goal, newGoal }) =>
+export const GoalProgress = ({current, goal=10, onNewGoal=f=>f}) => {
+
+    let _input
+    const progress = Math.floor(current / goal * 100)
+
+    return (
+        <div className="goal-progress">
+            <progress value={current} max={goal}/>
+            <span>{progress}%</span>
+            <input type="number"
+                   ref={input=>_input=input}
+                   defaultValue={goal}
+                   onChange={() => onNewGoal(_input.value)}/>
+            <span>days</span>
+        </div>
+    )
+
+}
+
+GoalProgress.propTypes = {
+    current: PropTypes.number.isRequired,
+    goal: PropTypes.number,
+    onNewGoal: PropTypes.func
+}
+
+export const SkiDayCount = ({ total=0, powder=0, backcountry=0 }) =>
     <div className="ski-day-count">
-        <span className="total-days">
-            {total}
+        <div className="total-days">
+            <span>{total}</span>
             <Calendar />
-            total
-        </span>
-        <span className="powder-days">
-            {powder}
+            <span>days</span>
+        </div>
+        <div className="powder-days">
+            <span>{powder}</span>
             <SnowFlake />
-            powders days
-        </span>
-        <span className="backcountry-days">
-            {backcountry}
+            <span>powder</span>
+        </div>
+        <div className="backcountry-days">
+            <span>{backcountry}</span>
             <Terrain />
-            backcountry days
-        </span>
+            <span>hiking</span>
+        </div>
     </div>
 
 SkiDayCount.propTypes = {
     total: PropTypes.number,
     powder: PropTypes.number,
-    backcountry: PropTypes.number,
-    goal: PropTypes.number.isRequired
+    backcountry: PropTypes.number
 }
 
-const SkiDayRow = ({ resort, date, powder, backcountry }) =>
-    <tr>
+const SkiDayRow = ({ resort, date, powder, backcountry, onRemoveDay=f=>f }) =>
+    <tr onDoubleClick={() => onRemoveDay(date)}>
         <td>
             {date}
         </td>
@@ -52,10 +75,11 @@ SkiDayRow.propTypes = {
     resort: PropTypes.string.isRequired,
     date: PropTypes.string.isRequired,
     powder: PropTypes.bool,
-    backcountry: PropTypes.bool
+    backcountry: PropTypes.bool,
+    onRemoveDay: PropTypes.func
 }
 
-export const SkiDayList = ({ days, filter}) => {
+export const SkiDayList = ({ days, filter, onRemoveDay=f=>f }) => {
 
     const filteredDays = (!filter || !filter.match(/powder|backcountry/)) ?
         days :
@@ -69,6 +93,7 @@ export const SkiDayList = ({ days, filter}) => {
     return (
         <div className="ski-day-list">
             <table>
+                <caption>double click to remove</caption>
                 <thead>
                 <tr>
                     <th>Date</th>
@@ -78,15 +103,15 @@ export const SkiDayList = ({ days, filter}) => {
                 </tr>
                 <tr>
                     <td colSpan={4}>
-                        <Link to="/ski-days" style={(!filter) ? activeFilterStyle : null}>All Days</Link>
-                        <Link to="/ski-days/powder" activeStyle={activeFilterStyle}>Powder Days</Link>
-                        <Link to="/ski-days/backcountry" activeStyle={activeFilterStyle}>Backcountry Days</Link>
+                        <Link to="/list-days" style={(!filter) ? activeFilterStyle : null}>All Days</Link>
+                        <Link to="/list-days/powder" activeStyle={activeFilterStyle}>Powder Days</Link>
+                        <Link to="/list-days/backcountry" activeStyle={activeFilterStyle}>Backcountry Days</Link>
                     </td>
                 </tr>
                 </thead>
                 <tbody>
                 {filteredDays.map((day, i) =>
-                    <SkiDayRow key={i} {...day} />
+                    <SkiDayRow key={i} {...day} onRemoveDay={onRemoveDay} />
                 )}
                 </tbody>
             </table>
@@ -96,6 +121,7 @@ export const SkiDayList = ({ days, filter}) => {
 
 SkiDayList.propTypes = {
     filter: PropTypes.oneOf(['powder', 'backcountry']),
+    onRemoveDay: PropTypes.func,
     days: (props) => (!Array.isArray(props.days)) ?
         new Error("SkiDayList days property must be an array") :
         (!props.days.length) ?
@@ -103,7 +129,49 @@ SkiDayList.propTypes = {
             null
 }
 
-export const AddDay = withRouter(({ onNewDay=f=>f, onError=f=>f, router}) => {
+class Autocomplete extends Component {
+
+    set value(newValue) {
+        this.refs.searchTerm.value = newValue
+    }
+
+    get value() {
+        return this.refs.searchTerm.value
+    }
+
+    render() {
+
+        const { suggestions=[], onChange=f=>f, onClear=f=>f, fetching=false } = this.props
+
+        return (
+            <div className="autocomplete">
+
+                <input ref="searchTerm"
+                       type="text"
+                       placeholder="mountain or resort..."
+                       onChange={onChange}
+                       onFocus={onChange}
+                       onBlur={() => setTimeout(onClear, 250)}
+                />
+
+                <span>{(fetching) ? <Downloading /> : null }</span>
+
+                <div className="suggestions">
+                    {suggestions.map((item, i) =>
+                        <p key={i} onClick={() => {
+                            this.refs.searchTerm.value = item
+                            onClear()
+                        }}>{item}</p>
+                    )}
+                </div>
+
+            </div>
+        )
+    }
+
+}
+
+export const AddDayForm = withRouter(({ suggestions=[], onNewDay=f=>f, onChange=f=>f, onClear=f=>f, fetching=false, router}) => {
 
     let _resort, _date, _powder, _backcountry
 
@@ -135,8 +203,12 @@ export const AddDay = withRouter(({ onNewDay=f=>f, onError=f=>f, router}) => {
 
             <label htmlFor="date">Resort Name</label>
 
-            <Autocomplete ref={input => _resort = input} feed="http://localhost:3333/resorts/"
-                          onError={onError}/>
+            <Autocomplete ref={input => _resort = input}
+                          suggestions={suggestions}
+                          onChange={() => onChange(_resort.value)}
+                          fetching={fetching}
+                          onClear={onClear}
+            />
 
             <label htmlFor="date">Date</label>
             <input id="date"
@@ -148,14 +220,14 @@ export const AddDay = withRouter(({ onNewDay=f=>f, onError=f=>f, router}) => {
                 <input id="powder-day"
                        ref={input => _powder = input}
                        type="checkbox"/>
-                <label htmlFor="powder-day">Powder Day</label>
+                <label htmlFor="powder-day">Powder</label>
             </div>
 
             <div>
                 <input id="backcountry-day"
                        ref={input => _backcountry = input}
                        type="checkbox"/>
-                <label htmlFor="backcountry-day">Backcountry Day</label>
+                <label htmlFor="backcountry-day">Backcountry</label>
             </div>
 
             <button>Add Day</button>
@@ -164,7 +236,27 @@ export const AddDay = withRouter(({ onNewDay=f=>f, onError=f=>f, router}) => {
     )
 })
 
-AddDay.propTypes = {
+AddDayForm.propTypes = {
+    suggestions: PropTypes.array,
     onNewDay: PropTypes.func,
-    onError: PropTypes.func
+    onChange: PropTypes.func,
+    onClear: PropTypes.func,
+    router: PropTypes.object
+}
+
+export const ShowErrors = ({ errors=[], onClearError=f=>f }) =>
+    <div className="show-errors">
+        {(errors.length) ?
+            errors.map((message, i) =>
+                <div key={i} className="error">
+                    <p>{message}</p>
+                    <CloseButton onClick={() => onClearError(i)}/>
+                </div>
+            ) : null
+        }
+    </div>
+
+ShowErrors.propTypes = {
+    errors: PropTypes.array,
+    onClearError: PropTypes.func
 }

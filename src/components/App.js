@@ -1,5 +1,5 @@
 import { Component } from 'react'
-import { SkiDayList, SkiDayCount, AddDay } from './ski-days'
+import { SkiDayList, SkiDayCount, AddDayForm } from './ski-days'
 import GoalProgress from './GoalProgress'
 import { Menu, ShowError } from './navigation'
 import { equals } from 'ramda'
@@ -37,7 +37,7 @@ class App extends Component {
                 skiDays: [
                     ...this.state.skiDays,
                     newDay
-                ].sort((a, b) => new Date(b.date) - new Date(a.date))
+                ]
             })
         }
     }
@@ -96,7 +96,7 @@ class App extends Component {
                                  powder={powderDays}
                                  backcountry={backcountryDays}/> :
                     (location.pathname === '/add-day') ?
-                        <AddDay onNewDay={this.addDay} onError={this.addError} /> :
+                        <AddDayForm onNewDay={this.addDay} onError={this.addError} /> :
                         <SkiDayList days={skiDays} filter={params.filter}/>
                 }
 
