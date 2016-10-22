@@ -4,6 +4,7 @@ import Terrain from 'react-icons/lib/md/terrain'
 import SnowFlake from 'react-icons/lib/ti/weather-snow'
 import Calendar from 'react-icons/lib/fa/calendar'
 import { Link, withRouter } from 'react-router'
+import '../stylesheets/ui.scss'
 
 export const GoalProgress = ({current, goal=10, onNewGoal=f=>f}) => {
 
@@ -242,21 +243,4 @@ AddDayForm.propTypes = {
     onChange: PropTypes.func,
     onClear: PropTypes.func,
     router: PropTypes.object
-}
-
-export const ShowErrors = ({ errors=[], onClearError=f=>f }) =>
-    <div className="show-errors">
-        {(errors.length) ?
-            errors.map((message, i) =>
-                <div key={i} className="error">
-                    <p>{message}</p>
-                    <CloseButton onClick={() => onClearError(i)}/>
-                </div>
-            ) : null
-        }
-    </div>
-
-ShowErrors.propTypes = {
-    errors: PropTypes.array,
-    onClearError: PropTypes.func
 }

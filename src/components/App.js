@@ -3,7 +3,7 @@ import { SkiDayList, SkiDayCount, AddDayForm } from './ski-days'
 import GoalProgress from './GoalProgress'
 import { Menu, ShowError } from './navigation'
 import { equals } from 'ramda'
-import '../../stylesheets/App.scss'
+import '../stylesheets/index.scss'
 
 class App extends Component {
 

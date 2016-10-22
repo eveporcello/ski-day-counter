@@ -1,6 +1,5 @@
 import { Component, PropTypes } from 'react'
 import fetch from 'isomorphic-fetch'
-import '../../stylesheets/Autocomplete.scss'
 
 class Autocomplete extends Component {
 
