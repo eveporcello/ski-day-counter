@@ -102,7 +102,9 @@ class App extends Component {
                                  powder={powderDays}
                                  backcountry={backcountryDays}/> :
                     (location.pathname === '/add-day') ?
-                        <AddDayForm onNewDay={this.addDay} onError={this.addError} /> :
+                        <AddDayForm onNewDay={this.addDay}
+                                    onError={this.addError}
+                        /> :
                         <SkiDayList days={skiDays} filter={params.filter} onRemoveDay={this.removeDay} />
                 }
 

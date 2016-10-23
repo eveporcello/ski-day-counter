@@ -1,9 +1,10 @@
-import '../../stylesheets/ski-days.scss'
 import { PropTypes, Component } from 'react'
 import Terrain from 'react-icons/lib/md/terrain'
 import SnowFlake from 'react-icons/lib/ti/weather-snow'
 import Calendar from 'react-icons/lib/fa/calendar'
+import Downloading from 'react-icons/lib/fa/cloud-download'
 import { Link, withRouter } from 'react-router'
+import fetch from 'isomorphic-fetch'
 import '../stylesheets/ui.scss'
 
 export const GoalProgress = ({current, goal=10, onNewGoal=f=>f}) => {
@@ -132,6 +133,15 @@ SkiDayList.propTypes = {
 
 class Autocomplete extends Component {
 
+    constructor(props) {
+        super(props)
+        this.state = {
+            fetching: false,
+            suggestions: []
+        }
+        this.onChange = this.onChange.bind(this)
+    }
+
     set value(newValue) {
         this.refs.searchTerm.value = newValue
     }
@@ -140,9 +150,31 @@ class Autocomplete extends Component {
         return this.refs.searchTerm.value
     }
 
+    onChange() {
+
+        const { feed } = this.props
+        const { value } = this.refs.searchTerm
+        const { fetching } = this.state
+
+        if (value && !fetching) {
+
+            this.setState({ fetching: true })
+            fetch(`${feed}/${value}`)
+                .then(response => response.json())
+                .then(suggestions => (!this.value) ?
+                    this.setState({ fetching: false, suggestions: [] }) :
+                    this.setState({ fetching: false, suggestions })
+                )
+
+        } else {
+            this.setState({ suggestions: [] })
+        }
+    }
+
     render() {
 
-        const { suggestions=[], onChange=f=>f, onClear=f=>f, fetching=false } = this.props
+        const { suggestions, fetching } = this.state
+        const { onChange } = this
 
         return (
             <div className="autocomplete">
@@ -161,7 +193,7 @@ class Autocomplete extends Component {
                     {suggestions.map((item, i) =>
                         <p key={i} onClick={() => {
                             this.refs.searchTerm.value = item
-                            onClear()
+                            this.setState({ suggestions: [] })
                         }}>{item}</p>
                     )}
                 </div>
@@ -205,11 +237,7 @@ export const AddDayForm = withRouter(({ suggestions=[], onNewDay=f=>f, onChange=
             <label htmlFor="date">Resort Name</label>
 
             <Autocomplete ref={input => _resort = input}
-                          suggestions={suggestions}
-                          onChange={() => onChange(_resort.value)}
-                          fetching={fetching}
-                          onClear={onClear}
-            />
+                          feed="http://localhost:3333/resorts" />
 
             <label htmlFor="date">Date</label>
             <input id="date"
